@@ -18,3 +18,7 @@ bin-release/
 # information for Eclipse / Flash Builder.
 node_modules/
 build/
+
+convert-and-encrypt.cjs
+dialogues.json
+encryptPassword.js

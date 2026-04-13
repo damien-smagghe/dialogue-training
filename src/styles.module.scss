@@ -1,0 +1,272 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  row-gap: 30px;
+  background: #333;
+  padding: 30px;
+  position: relative;
+}
+
+.dialogueList {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+  margin-top: 20px;
+  flex-grow: 1;
+}
+
+.dialogueItem {
+  background: #fff;
+  color: #111;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: 1px solid #ddd;
+  display: block;
+  text-align: left;
+}
+.dialogueItemReading {
+  border: 3px solid #007bff;
+}
+
+.dialogueItem:hover {
+  background-color: #f0f0f0;
+}
+
+.characterName {
+  font-weight: bold;
+  color: #007bff;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.dialogueText {
+  display: block;
+  line-height: 1.4;
+}
+
+.readingTime {
+  display: block;
+  color: #6c757d;
+  font-size: 12px;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.readingTime::before {
+  content: "• ";
+  color: #007bff;
+  font-weight: bold;
+}
+
+.stickyControls {
+  position: sticky;
+  width: min-content;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  background: #333;
+  padding: 15px;
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+.heroButton {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.playButton {
+  background: #28a745;
+  color: white;
+}
+
+.playButton:hover:not(:disabled) {
+  background: #218838;
+}
+
+.playButton:disabled {
+  background: #6c757d;
+}
+
+.stopButton {
+  background: #dc3545;
+  color: white;
+}
+
+.stopButton:hover:not(:disabled) {
+  background: #c82333;
+}
+
+.stopButton:disabled {
+  background: #6c757d;
+}
+
+/* Voice Selector Styles */
+.voiceSelectorContainer {
+  position: relative;
+  width: 100%;
+  position: sticky;
+  top: 10px;
+  z-index: 2;
+}
+
+.voiceSelectorToggle {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  width: 100%;
+  text-align: center;
+}
+
+.voiceSelectorToggle:hover {
+  background: #0056b3;
+}
+
+.voiceSelectorDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  margin-top: 10px;
+  z-index: 10;
+}
+
+.voiceSelectorGroup {
+  margin-bottom: 20px;
+}
+
+.voiceSelectorGroup label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.voiceSelectorGroup select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Character Selection Styles */
+.characterSelection {
+  background: #f0f8ff;
+  border: 1px solid #007bff;
+  border-left: 4px solid #007bff;
+}
+
+.characterSelection select {
+  background: #fff;
+  cursor: pointer;
+}
+
+.characterSelection::before {
+  content: "👤";
+  display: inline-block;
+  margin-right: 5px;
+}
+
+/* Selected Character Styles */
+.selectedCharacter {
+  color: #0056b3;
+  position: relative;
+}
+
+.selectedCharacter::after {
+  content: " ⚡";
+  color: #ffc107;
+}
+
+.characterVoiceSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.characterVoiceSelector span {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Pagination Styles */
+.paginationControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
+  padding: 10px;
+  background: #444;
+  border-radius: 8px;
+  position: sticky;
+  top: 70px
+}
+
+.paginationButton {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.paginationButton:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.pageIndicator {
+  color: white;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+.page {
+  background: #fff;
+  color: #111;
+  width: 800px;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.pageTitle {
+  text-align: center;
+  font-size: 30px;
+  line-height: 42px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.user {
+  font-weight: bold;
+}

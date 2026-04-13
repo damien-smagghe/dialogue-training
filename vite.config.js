@@ -9,5 +9,17 @@ export default defineConfig({
   },
   server: {
     port: 3000
+  },
+  resolve: {
+    alias: {
+      '@': '/src'
+    },
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
+  },
+  css: {
+    modules: {
+      localsConvention: 'camelCaseOnly',
+      generateScopedName: 'data-[locals][hash:base64]'
+    }
   }
 })
