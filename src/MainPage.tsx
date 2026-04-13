@@ -1,6 +1,7 @@
 import styles from "./styles.module.scss";
 import { useDialogReader } from "../hooks/useDialogReader";
 import { useState, useEffect, useRef } from "react";
+import SettingsIcon from "./components/SettingsIcon.svg";
 
 interface MainPageProps {
   dialogues: readonly {
@@ -99,8 +100,12 @@ const Hero = ({ dialogues, characters }: MainPageProps) => {
           <button
             className={styles.voiceSelectorToggle}
             onClick={() => setIsVoiceSelectorOpen(!isVoiceSelectorOpen)}
+            aria-label="Settings"
           >
-            Voice & Character Settings
+            <SettingsIcon color="#3b82f6" />
+            <span style={{ marginLeft: "0.5rem", fontSize: "14px" }}>
+              Voice & Character Settings
+            </span>
           </button>
 
           {isVoiceSelectorOpen && (

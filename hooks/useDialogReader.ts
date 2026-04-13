@@ -1,18 +1,22 @@
 import { useState, useEffect } from "react";
 import useSequentialReader from "./useSequentialReader";
 import speech from "../utils/speech";
-
+import useSession from "./useSession.ts";
 export type UseDialogReaderResult = ReturnType<typeof useDialogReader>;
 
-export type ReadingTime = ReturnType<typeof useSequentialReader>["readingTimes"][number];
+export type ReadingTime = ReturnType<
+  typeof useSequentialReader
+>["readingTimes"][number];
 
-const useSequentialReaderWithTimes = useSequentialReader as (args: Parameters<typeof useSequentialReader>[0]) => ReturnType<typeof useSequentialReader> & {
+const useSequentialReaderWithTimes = useSequentialReader as (
+  args: Parameters<typeof useSequentialReader>[0],
+) => ReturnType<typeof useSequentialReader> & {
   readingTimes: ReadingTime[];
   dialogue: string;
   key: string;
   readingTime: number;
   isRead: boolean;
-}
+};
 
 export const useDialogReader = ({
   dialogues,
@@ -20,7 +24,8 @@ export const useDialogReader = ({
 }: {
   dialogues: readonly { dialogue: string; name: string; key: string }[][];
   characters: string[];
-})  => {
+}) => {
+  const { session, updateSession } = useSession();
   // french Voices
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   useEffect(() => {
@@ -33,14 +38,15 @@ export const useDialogReader = ({
         setVoices(frenchVoices);
         const [firstVoice] = frenchVoices;
         if (!firstVoice) {
-          return 
+          return;
         }
-        setVoiceNameByCharacters(
-          characters.reduce(
+        setVoiceNameByCharacters({
+          ...characters.reduce(
             (acc, character) => ({ ...acc, [character]: firstVoice.name }),
             {} as Record<string, string | undefined>,
           ),
-        );
+          ...voiceNameByCharacters,
+        });
       }
     };
 
@@ -54,25 +60,42 @@ export const useDialogReader = ({
   }, [characters]);
 
   // Voices by Characters
-  const [voiceNameByCharacters, setVoiceNameByCharacters] = useState<
-    Record<string, string | undefined>
-  >(
-    characters.reduce(
-      (acc, character) => ({ ...acc, [character]: undefined }),
-      {} as Record<string, string | undefined>,
-    ),
-  );
+  console.log("session ->", session);
+  const { voiceNameByCharacters } = session;
+  const setVoiceNameByCharacters = (
+    newVoiceNameByCharacters: Record<string, string | undefined>,
+  ) => updateSession({ voiceNameByCharacters: newVoiceNameByCharacters });
+  useEffect(() => {
+    console.log("setVoiceNameByCharacters -> ", voiceNameByCharacters, {
+      ...characters.reduce(
+        (acc, character) => ({ ...acc, [character]: undefined }),
+        {} as Record<string, string | undefined>,
+      ),
+      ...voiceNameByCharacters,
+    });
+    // setVoiceNameByCharacters({
+    //   ...characters.reduce(
+    //     (acc, character) => ({ ...acc, [character]: undefined }),
+    //     {} as Record<string, string | undefined>,
+    //   ),
+    //   ...voiceNameByCharacters,
+    // });
+  }, []);
+
   const handleCharacterVoiceChange = (
     character: string,
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    const voiceName = event.target.value
+    const voiceName = event.target.value;
     setVoiceNameByCharacters({
       ...voiceNameByCharacters,
       [character]: voiceName,
     });
-    stop()
-    speech({text: voiceName, voice: voices.find(({ name }) => name === voiceName)! })
+    stop();
+    speech({
+      text: voiceName,
+      voice: voices.find(({ name }) => name === voiceName)!,
+    });
   };
   const voiceByCharacters = Object.keys(voiceNameByCharacters).reduce(
     (acc, characterName) => {
@@ -86,14 +109,15 @@ export const useDialogReader = ({
     {},
   );
 
-  const { start, stop, reading, readingText, readingTimes } = useSequentialReaderWithTimes({
-    voices: voiceByCharacters,
-    textsToRead: dialogues.flat().map(({ dialogue, name, key }) => ({
-      text: dialogue,
-      voiceName: name,
-      key,
-    })),
-  });
+  const { start, stop, reading, readingText, readingTimes } =
+    useSequentialReaderWithTimes({
+      voices: voiceByCharacters,
+      textsToRead: dialogues.flat().map(({ dialogue, name, key }) => ({
+        text: dialogue,
+        voiceName: name,
+        key,
+      })),
+    });
 
   return {
     voices,
@@ -103,6 +127,6 @@ export const useDialogReader = ({
     voiceNameByCharacters,
     handleCharacterVoiceChange,
     readingText,
-    readingTimes
+    readingTimes,
   };
 };

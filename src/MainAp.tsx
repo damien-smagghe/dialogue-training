@@ -3,76 +3,47 @@ import { createRoot } from "react-dom/client";
 import MainPage from "./MainPage";
 import DialoguesDecrypt from "./components/DialoguesDecrypt";
 import { useState, useEffect } from "react";
+import useSession from "../hooks/useSession.ts";
+import SimpleCrypto from "simple-crypto-js";
+import encryptedFile from "./dialogues.enc.json";
 
 const DecryptedApp = () => {
+  const { session, updateSession } = useSession();
+
+  // State to hold decrypted dialogues
+  const [dialogues, setDialogues] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [decryptError, setDecryptError] = useState("");
+
   // Decrypt the encrypted dialogues
   const decryptDialogues = async () => {
     try {
-      const response = await fetch("./src/dialogues.enc.json");
-      const encryptedData = await response.json();
+      console.log('session ->', session)
+      const crypto = new SimpleCrypto(session.password);
 
-      // Helper to convert hex to Uint8Array
-      const hexToBytes = (hex) => {
-        const bytes = new Uint8Array(hex.length / 2);
-        for (let i = 0; i < hex.length; i += 2) {
-          bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
-        }
-        return bytes;
-      };
-
-      // Generate key from password using stored salt
-      const crypto = window.crypto || window.msCrypto;
-      const encoder = new TextEncoder();
-
-      // Import password as key material
-      const keyMaterial = await crypto.subtle.importKey(
-        "raw",
-        encoder.encode("temmppp"),
-        "PBKDF2",
-        false,
-        ["deriveBits", "deriveKey"],
+      // Encrypted data from imported file
+      const encryptedData = encryptedFile.data;
+      // Decrypt (result is a Promise that resolves to an array)
+      const dialoguesData = await crypto.decrypt(
+        encryptedData,
+        "SHA-256",
+        100000,
       );
-
-      // Derive key
-      const key = await crypto.subtle.deriveKey(
-        {
-          name: "PBKDF2",
-          salt: hexToBytes(encryptedData.salt),
-          iterations: 100000,
-          hash: "SHA-256",
-        },
-        keyMaterial,
-        { name: "AES-GCM", length: 256 },
-        true,
-        ["encrypt", "decrypt"],
-      );
-
-      // Decrypt
-      const decipher = crypto.subtle.decrypt(
-        { name: "AES-GCM", iv: hexToBytes(encryptedData.iv) },
-        key,
-        hexToBytes(encryptedData.ciphertext),
-      );
-
-      const decryptedText = await decipher;
-      console.log("decryptedText ->", decryptedText);
-      const dialogueData = JSON.parse(decryptedText);
-
-      // Extract unique characters from dialogues
-      const characters = new Set();
-      for (const page of dialogueData) {
+      // Extract unique characters
+      const characters = new Set<string>();
+      for (const page of dialoguesData) {
         for (const dialogue of page) {
-          characters.add(dialogue.name);
+          if (dialogue.name) {
+            characters.add(dialogue.name);
+          }
         }
       }
 
-      const charactersArray = Array.from(characters).sort();
-
-      // Update with characters
-      dialogueData.characters = charactersArray;
-
-      console.log("Dialogues decrypted successfully:", dialogueData);
-      setDialogues(dialogueData);
+      console.log("Dialogues decrypted successfully:", dialoguesData);
+      setDialogues({
+        dialogues: dialoguesData,
+        characters: Array.from(characters).sort(),
+      });
       setLoading(false);
     } catch (err) {
       console.error("Decryption error:", err);
@@ -80,11 +51,6 @@ const DecryptedApp = () => {
       setLoading(false);
     }
   };
-
-  // State to hold decrypted dialogues
-  const [dialogues, setDialogues] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [decryptError, setDecryptError] = useState("");
 
   useEffect(() => {
     // Auto-decrypt when component mounts
@@ -130,7 +96,10 @@ const DecryptedApp = () => {
 
   return (
     <StrictMode>
-      <MainPage dialogues={dialogues.dialogues} characters={dialogues.characters} />
+      <MainPage
+        dialogues={dialogues.dialogues}
+        characters={dialogues.characters}
+      />
     </StrictMode>
   );
 };
