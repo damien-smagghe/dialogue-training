@@ -14,7 +14,13 @@ const useSequentialReader = ({
   textsToRead,
 }: {
   voices: Record<string, SpeechSynthesisVoice | undefined>;
-  textsToRead: { text: string; voiceName: string; key: string }[];
+  textsToRead: {
+    text: string;
+    voiceName: string;
+    key: string;
+    muted: boolean;
+    readingTime: number;
+  }[];
 }) => {
   const [reading, setReading] = useState<boolean>(false);
   const [redingIndex, setRedingIndex] = useState<number>(-1);
@@ -31,8 +37,8 @@ const useSequentialReader = ({
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
       if (isWaiting.current) {
-        clearTimeout(isWaiting.current)
-        isWaiting.current = null
+        clearTimeout(isWaiting.current);
+        isWaiting.current = null;
       }
       speechWorking.current = false;
     }
@@ -50,8 +56,8 @@ const useSequentialReader = ({
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
       if (isWaiting.current) {
-        clearTimeout(isWaiting.current)
-        isWaiting.current = null
+        clearTimeout(isWaiting.current);
+        isWaiting.current = null;
       }
       speechWorking.current = false;
     }
@@ -62,6 +68,8 @@ const useSequentialReader = ({
       const textToRead: string = textsToRead[index].text;
       const voiceName: string = textsToRead[index].voiceName;
       const dialogueKey: string = textsToRead[index].key;
+      const muted: boolean = textsToRead[index].muted;
+      const readingTime: number = textsToRead[index].readingTime;
       if (!textToRead || !reading) {
         return;
       }
@@ -72,7 +80,13 @@ const useSequentialReader = ({
       // Create speech utterance for current dialogue
       speechWorking.current = true;
       try {
-        await speech({ text: textToRead, voice: voices[voiceName]! });
+        if (muted) {
+          await new Promise((resolve) => {
+            setTimeout(resolve, readingTime * 1000);
+          });
+        } else {
+          await speech({ text: textToRead, voice: voices[voiceName]! });
+        }
       } finally {
         speechWorking.current = false;
       }
@@ -104,11 +118,11 @@ const useSequentialReader = ({
       }
 
       // Move to next dialogue
-      const nextIndex = index + 1
+      const nextIndex = index + 1;
       if (reading && textsToRead[nextIndex]) {
         setRedingIndex(nextIndex);
       } else {
-        stop()
+        stop();
       }
     },
     [reading, textsToRead, voices, readingTimes],

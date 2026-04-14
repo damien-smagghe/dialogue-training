@@ -21,9 +21,16 @@ const useSequentialReaderWithTimes = useSequentialReader as (
 export const useDialogReader = ({
   dialogues,
   characters,
+  hideCharacterDialogue
 }: {
-  dialogues: readonly { dialogue: string; name: string; key: string }[][];
+  dialogues: readonly {
+    dialogue: string;
+    name: string;
+    key: string;
+    readingTime: number;
+  }[][];
   characters: string[];
+  hideCharacterDialogue: boolean
 }) => {
   const { session, updateSession } = useSession();
   // french Voices
@@ -82,6 +89,10 @@ export const useDialogReader = ({
     // });
   }, []);
 
+  const { selectedCharacter } = session;
+  const setSelectedCharacter = (newSelectedCharacter) =>
+    updateSession({ selectedCharacter: newSelectedCharacter });
+
   const handleCharacterVoiceChange = (
     character: string,
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -112,12 +123,18 @@ export const useDialogReader = ({
   const { start, stop, reading, readingText, readingTimes } =
     useSequentialReaderWithTimes({
       voices: voiceByCharacters,
-      textsToRead: dialogues.flat().map(({ dialogue, name, key }) => ({
-        text: dialogue,
-        voiceName: name,
-        key,
-      })),
+      textsToRead: dialogues
+        .flat()
+        .map(({ dialogue, name, key, readingTime }) => ({
+          text: dialogue,
+          voiceName: name,
+          key,
+          readingTime,
+          muted: name === selectedCharacter && hideCharacterDialogue
+        })),
     });
+
+  console.log("readingTimes ->", readingTimes);
 
   return {
     voices,
@@ -128,5 +145,7 @@ export const useDialogReader = ({
     handleCharacterVoiceChange,
     readingText,
     readingTimes,
+    selectedCharacter,
+    setSelectedCharacter,
   };
 };

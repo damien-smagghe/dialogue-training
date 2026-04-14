@@ -3,10 +3,16 @@ import { useRef, useState } from "react";
 const SESSION_KEY = "dialogue-training-session";
 
 const useSession = () => {
-  const [session, setSession] = useState({
+  const [session, setSession] = useState<{
+    password: string | undefined; // The password for the session.
+    voiceNameByCharacters: Record<string, string>; // A map of character names to their respective voice names.
+    selectedCharacter: string | undefined; // The currently selected character in the session.
+  }>({
     password: undefined,
     voiceNameByCharacters: {},
+    selectedCharacter: undefined,
   });
+
   const loaded = useRef(false);
   console.log("window ->", window.location);
   let hashPassword = decodeURIComponent(window.location.hash);

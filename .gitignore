@@ -21,4 +21,5 @@ build/
 
 convert-and-encrypt.cjs
 dialogues.json
+times.json
 encryptPassword.js
