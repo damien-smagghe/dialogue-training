@@ -104,8 +104,11 @@ const useSequentialReader = ({
       }
 
       // Move to next dialogue
-      if (reading) {
-        setRedingIndex(index + 1);
+      const nextIndex = index + 1
+      if (reading && textsToRead[nextIndex]) {
+        setRedingIndex(nextIndex);
+      } else {
+        stop()
       }
     },
     [reading, textsToRead, voices, readingTimes],
