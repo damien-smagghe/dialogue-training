@@ -21,7 +21,8 @@ const useSequentialReaderWithTimes = useSequentialReader as (
 export const useDialogReader = ({
   dialogues,
   characters,
-  hideCharacterDialogue
+  hideCharacterDialogue,
+  muteSelectedCharacter
 }: {
   dialogues: readonly {
     dialogue: string;
@@ -30,7 +31,8 @@ export const useDialogReader = ({
     readingTime: number;
   }[][];
   characters: string[];
-  hideCharacterDialogue: boolean
+  hideCharacterDialogue: boolean;
+  muteSelectedCharacter?: boolean;
 }) => {
   const { session, updateSession } = useSession();
   // french Voices
@@ -130,7 +132,7 @@ export const useDialogReader = ({
           voiceName: name,
           key,
           readingTime,
-          muted: name === selectedCharacter && hideCharacterDialogue
+          muted: (name === selectedCharacter && (hideCharacterDialogue || muteSelectedCharacter))
         })),
     });
 

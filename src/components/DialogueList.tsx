@@ -12,6 +12,7 @@ interface DialogueListProps {
   } | null;
   selectedCharacter: string | null;
   hideCharacterDialogue: boolean;
+  muteSelectedCharacter: boolean;
   readSpecificDialogue: (dialogueItem: {
     name: string;
     dialogue: string;
@@ -25,6 +26,7 @@ const DialogueList = ({
   readingText,
   selectedCharacter,
   hideCharacterDialogue,
+  muteSelectedCharacter,
   readSpecificDialogue,
   dialogueListRef
 }: DialogueListProps) => {
@@ -43,7 +45,7 @@ const DialogueList = ({
           }`}
           onClick={() => readSpecificDialogue(item)}
           disabled={
-            hideCharacterDialogue &&
+            (hideCharacterDialogue || muteSelectedCharacter) &&
             selectedCharacter != null &&
             item.name === selectedCharacter
           }

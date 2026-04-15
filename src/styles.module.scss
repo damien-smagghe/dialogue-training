@@ -347,6 +347,27 @@
   font-weight: bold;
 }
 
+/* Pagination Controls Styles */
+.controlsToggles {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.toggleLabel input {
+  cursor: pointer;
+}
+
 /* New improved modal styles */
 .voiceSelectorModalBody {
   flex: 1;

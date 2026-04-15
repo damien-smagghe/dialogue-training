@@ -7,6 +7,10 @@ interface PaginationControlsProps {
   isLastPage: boolean;
   goToPreviousPage: () => void;
   goToNextPage: () => void;
+  hideCharacterDialogue: boolean;
+  setHideCharacterDialogue: (hide: boolean) => void;
+  muteSelectedCharacter: boolean;
+  setMuteSelectedCharacter: (mute: boolean) => void;
 }
 
 const PaginationControls = ({
@@ -15,7 +19,11 @@ const PaginationControls = ({
   isFirstPage,
   isLastPage,
   goToPreviousPage,
-  goToNextPage
+  goToNextPage,
+  hideCharacterDialogue,
+  setHideCharacterDialogue,
+  muteSelectedCharacter,
+  setMuteSelectedCharacter
 }: PaginationControlsProps) => {
   return (
     <div className={styles.paginationControls}>
@@ -38,6 +46,26 @@ const PaginationControls = ({
       >
         Next
       </button>
+
+      {/* New toggles for character dialogue and voice mute */}
+      <div className={styles.controlsToggles}>
+        <label className={styles.toggleLabel}>
+          <input
+            type="checkbox"
+            checked={hideCharacterDialogue}
+            onChange={(e) => setHideCharacterDialogue(e.target.checked)}
+          />
+          Hide Character Dialogue
+        </label>
+        <label className={styles.toggleLabel}>
+          <input
+            type="checkbox"
+            checked={muteSelectedCharacter}
+            onChange={(e) => setMuteSelectedCharacter(e.target.checked)}
+          />
+          Mute Selected Character
+        </label>
+      </div>
     </div>
   );
 };

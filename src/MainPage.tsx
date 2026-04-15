@@ -56,6 +56,7 @@ const Hero = ({ dialogues, characters }: MainPageProps) => {
   };
 
   const [hideCharacterDialogue, setHideCharacterDialogue] = useState(true);
+  const [muteSelectedCharacter, setMuteSelectedCharacter] = useState(false);
   const {
     voices,
     start,
@@ -135,6 +136,10 @@ const Hero = ({ dialogues, characters }: MainPageProps) => {
           isLastPage={isLastPage}
           goToPreviousPage={goToPreviousPage}
           goToNextPage={goToNextPage}
+          hideCharacterDialogue={hideCharacterDialogue}
+          setHideCharacterDialogue={setHideCharacterDialogue}
+          muteSelectedCharacter={muteSelectedCharacter}
+          setMuteSelectedCharacter={setMuteSelectedCharacter}
         />
 
         {/* Current Page Dialogue List */}
@@ -143,6 +148,7 @@ const Hero = ({ dialogues, characters }: MainPageProps) => {
           readingText={readingText}
           selectedCharacter={selectedCharacter}
           hideCharacterDialogue={hideCharacterDialogue}
+          muteSelectedCharacter={muteSelectedCharacter}
           readSpecificDialogue={readSpecificDialogue}
           dialogueListRef={dialogueListRef}
         />
