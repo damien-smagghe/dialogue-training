@@ -51,11 +51,20 @@ const VoiceSelectorModal = ({
     }
   };
 
+  // Group voices by language for better UX
+  const voicesByLanguage = voices.reduce((acc, voice) => {
+    if (!acc[voice.lang]) {
+      acc[voice.lang] = [];
+    }
+    acc[voice.lang].push(voice);
+    return acc;
+  }, {} as Record<string, typeof voices>);
+
   return (
     <div className={styles.voiceSelectorModal}>
       <div className={styles.voiceSelectorModalContent}>
         <div className={styles.voiceSelectorModalHeader}>
-          <h2>Voice & Character Settings</h2>
+          <h2>Audio Settings</h2>
           <button
             className={styles.voiceSelectorModalClose}
             onClick={onClose}
@@ -64,52 +73,66 @@ const VoiceSelectorModal = ({
             ×
           </button>
         </div>
-        <div className={styles.voiceSelectorDropdown}>
-          {/* Character Voice Selectors */}
+
+        <div className={styles.voiceSelectorModalBody}>
+          {/* Character Voice Selectors - Improved UX */}
           <div className={styles.voiceSelectorGroup}>
-            <label>Character Voices:</label>
-            {characters.map((name) => (
-              <div key={name} className={styles.characterVoiceSelector}>
-                <span>{name}:</span>
-                <select
-                  onChange={(event) => handleCharacterVoiceChange(name, event)}
-                  value={voiceNameByCharacters[name]}
-                >
-                  <option value="">Select a French Voice for {name}</option>
-                  {voices.map((voice) => (
-                    <option key={voice.name} value={voice.name}>
-                      {voice.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ))}
+            <h3>Character Voices</h3>
+            <p className={styles.voiceSelectorDescription}>
+              Select a voice for each character to personalize your reading experience
+            </p>
+
+            <div className={styles.voiceSelectorGrid}>
+              {characters.map((name) => (
+                <div key={name} className={styles.voiceSelectorItem}>
+                  <label className={styles.voiceSelectorLabel}>
+                    {name}
+                  </label>
+                  <div className={styles.voiceSelectorSelectContainer}>
+                    <select
+                      onChange={(event) => handleCharacterVoiceChange(name, event)}
+                      value={voiceNameByCharacters[name]}
+                      className={styles.voiceSelectorSelect}
+                    >
+                      <option value="">Choose a voice for {name}</option>
+                      {voices.map((voice) => (
+                        <option key={voice.name} value={voice.name}>
+                          {voice.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Character Selection */}
           <div className={styles.voiceSelectorGroup}>
-            <label
-              htmlFor="character-select"
-              className={styles.characterSelection}
-            >
-              Selected Character:
-            </label>
-            <select
-              id="character-select"
-              onChange={handleCharacterChange}
-              value={selectedCharacter || characters[0] || ""}
-            >
-              <option value="">Select a character to focus on</option>
-              {characters.map((character) => (
-                <option key={character} value={character}>
-                  {character}
-                </option>
-              ))}
-            </select>
+            <h3>Focus Character</h3>
+            <p className={styles.voiceSelectorDescription}>
+              Select which character's dialogue you want to focus on
+            </p>
+
+            <div className={styles.voiceSelectorSelectContainer}>
+              <select
+                id="character-select"
+                onChange={handleCharacterChange}
+                value={selectedCharacter || characters[0] || ""}
+                className={styles.voiceSelectorSelect}
+              >
+                <option value="">Select a character to focus on</option>
+                {characters.map((character) => (
+                  <option key={character} value={character}>
+                    {character}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {/* Hide Dialogue Toggle */}
-            <div style={{ marginTop: "10px" }}>
-              <label style={{ fontSize: "14px", color: "#333" }}>
+            <div className={styles.voiceSelectorToggleContainer}>
+              <label className={styles.voiceSelectorLabel}>
                 <input
                   type="checkbox"
                   checked={hideCharacterDialogue}
@@ -119,9 +142,38 @@ const VoiceSelectorModal = ({
               </label>
             </div>
           </div>
-          <button onClick={onClose} className={styles.button} type="button">
-            Ok
-          </button>
+
+          {/* Quick Actions */}
+          <div className={styles.voiceSelectorGroup}>
+            <h3>Quick Actions</h3>
+            <div className={styles.voiceSelectorQuickActions}>
+              <button
+                className={styles.voiceSelectorQuickAction}
+                onClick={() => {
+                  // Reset all voices to default
+                  characters.forEach(character => {
+                    handleCharacterVoiceChange(character, { target: { value: '' } } as any);
+                  });
+                  setSelectedCharacter(null);
+                  setHideCharacterDialogue(false);
+                }}
+              >
+                Reset to Defaults
+              </button>
+              <button
+                className={styles.voiceSelectorQuickAction}
+                onClick={() => {
+                  // Apply to all characters
+                  const defaultVoice = voices[0]?.name || '';
+                  characters.forEach(character => {
+                    handleCharacterVoiceChange(character, { target: { value: defaultVoice } } as any);
+                  });
+                }}
+              >
+                Apply to All
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
