@@ -1,4 +1,4 @@
-import styles from "./dialogueLis.module.scss";
+import styles from "./dialogueList.module.scss";
 import DialogueItem from "./DialogueItem";
 
 interface DialogueListProps {

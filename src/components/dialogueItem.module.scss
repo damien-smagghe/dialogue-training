@@ -1,0 +1,48 @@
+.dialogueItem {
+  background: #fff;
+  color: #111;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: 1px solid #ddd;
+  display: block;
+  text-align: left;
+  font-size: 16px;
+}
+.currentUserDialogue {
+  background-color: #d2ecf3;
+}
+.dialogueItemReading {
+  border: 3px solid #007bff;
+}
+
+.dialogueItem:hover {
+  background-color: #f0f0f0;
+}
+
+.characterName {
+  font-weight: bold;
+  color: #007bff;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.dialogueText {
+  display: block;
+  line-height: 1.4;
+}
+
+.readingTime {
+  display: block;
+  color: #6c757d;
+  font-size: 12px;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.readingTime::before {
+  content: "• ";
+  color: #007bff;
+  font-weight: bold;
+}

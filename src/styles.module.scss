@@ -4,8 +4,6 @@
   background: #333;
   position: relative;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  height: 100vh;
-  overflow-y: auto;
 }
 
 .dialogueList {
@@ -155,6 +153,7 @@
   align-items: center;
   z-index: 1000;
   overflow: hidden;
+  z-index: 3;
 }
 
 .voiceSelectorModalContent {

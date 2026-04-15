@@ -1,4 +1,4 @@
-import styles from "../styles.module.scss";
+import styles from "./dialogueItem.module.scss";
 import { useState, useEffect } from "react";
 import ProgressBar from "./ProgressBar";
 import { useTimeProgress } from "../hooks/useTimeProgress";
