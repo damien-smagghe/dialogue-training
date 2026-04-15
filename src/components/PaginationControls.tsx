@@ -49,22 +49,24 @@ const PaginationControls = ({
 
       {/* New toggles for character dialogue and voice mute */}
       <div className={styles.controlsToggles}>
-        <label className={styles.toggleLabel}>
-          <input
-            type="checkbox"
-            checked={hideCharacterDialogue}
-            onChange={(e) => setHideCharacterDialogue(e.target.checked)}
-          />
+        <button
+          className={`${styles.toggleButton} ${
+            hideCharacterDialogue ? styles.toggleButtonActive : ""
+          }`}
+          onClick={() => setHideCharacterDialogue(!hideCharacterDialogue)}
+          aria-pressed={hideCharacterDialogue}
+        >
           Hide Character Dialogue
-        </label>
-        <label className={styles.toggleLabel}>
-          <input
-            type="checkbox"
-            checked={muteSelectedCharacter}
-            onChange={(e) => setMuteSelectedCharacter(e.target.checked)}
-          />
+        </button>
+        <button
+          className={`${styles.toggleButton} ${
+            muteSelectedCharacter ? styles.toggleButtonActive : ""
+          }`}
+          onClick={() => setMuteSelectedCharacter(!muteSelectedCharacter)}
+          aria-pressed={muteSelectedCharacter}
+        >
           Mute Selected Character
-        </label>
+        </button>
       </div>
     </div>
   );

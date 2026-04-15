@@ -509,3 +509,31 @@
 .button:hover:not(:disabled) {
   background-color: #2563eb;
 }
+
+/* Toggle button styles */
+.toggleButton {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggleButton:hover:not(:disabled) {
+  background: #5a6268;
+}
+
+.toggleButtonActive {
+  background: #007bff;
+}
+
+.toggleButtonActive:hover {
+  background: #0056b3;
+}
