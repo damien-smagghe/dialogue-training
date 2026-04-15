@@ -1,4 +1,5 @@
 import styles from "../styles.module.scss";
+import ToggleButton from "./ToggleButton";
 
 interface PaginationControlsProps {
   currentPageNumber: number;
@@ -49,24 +50,18 @@ const PaginationControls = ({
 
       {/* New toggles for character dialogue and voice mute */}
       <div className={styles.controlsToggles}>
-        <button
-          className={`${styles.toggleButton} ${
-            hideCharacterDialogue ? styles.toggleButtonActive : ""
-          }`}
+        <ToggleButton
+          isActive={hideCharacterDialogue}
           onClick={() => setHideCharacterDialogue(!hideCharacterDialogue)}
-          aria-pressed={hideCharacterDialogue}
-        >
-          Hide Character Dialogue
-        </button>
-        <button
-          className={`${styles.toggleButton} ${
-            muteSelectedCharacter ? styles.toggleButtonActive : ""
-          }`}
+          label="Hide Character Dialogue"
+          ariaPressed={hideCharacterDialogue}
+        />
+        <ToggleButton
+          isActive={muteSelectedCharacter}
           onClick={() => setMuteSelectedCharacter(!muteSelectedCharacter)}
-          aria-pressed={muteSelectedCharacter}
-        >
-          Mute Selected Character
-        </button>
+          label="Mute Selected Character"
+          ariaPressed={muteSelectedCharacter}
+        />
       </div>
     </div>
   );
