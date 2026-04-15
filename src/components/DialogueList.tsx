@@ -37,7 +37,7 @@ const DialogueList = ({
         <DialogueItem
           key={item.key}
           item={item}
-          readingText={readingText}
+          reading={readingText?.key === item.key}
           selectedCharacter={selectedCharacter}
           hideCharacterDialogue={hideCharacterDialogue}
           muteSelectedCharacter={muteSelectedCharacter}

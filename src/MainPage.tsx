@@ -145,7 +145,7 @@ const Hero = ({ dialogues, characters }: MainPageProps) => {
         {/* Current Page Dialogue List */}
         <DialogueList
           currentDialoguePage={currentDialoguePage}
-          readingText={readingText}
+          readingText={reading ? readingText: null}
           selectedCharacter={selectedCharacter}
           hideCharacterDialogue={hideCharacterDialogue}
           muteSelectedCharacter={muteSelectedCharacter}

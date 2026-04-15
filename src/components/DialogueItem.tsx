@@ -10,9 +10,7 @@ interface DialogueItemProps {
     dialogue: string;
     key: string;
   };
-  readingText: {
-    key: string;
-  } | null;
+  reading: boolean;
   selectedCharacter: string | null;
   hideCharacterDialogue: boolean;
   muteSelectedCharacter: boolean;
@@ -25,7 +23,7 @@ interface DialogueItemProps {
 
 const DialogueItem = ({
   item,
-  readingText,
+  reading,
   selectedCharacter,
   hideCharacterDialogue,
   muteSelectedCharacter,
@@ -43,12 +41,12 @@ const DialogueItem = ({
   const { progress, start, stop } = useTimeProgress({ time: item.readingTime });
 
   useEffect(() => {
-    if (readingText?.key === item.key && item.readingTime > 0) {
+    if (reading && item.readingTime > 0) {
       start();
     } else {
       stop();
     }
-  }, [readingText, item.key, item.readingTime]);
+  }, [reading, item.readingTime]);
 
   const handleClick = () => {
     if(dialogueIsDisabled) {
@@ -63,7 +61,7 @@ const DialogueItem = ({
       key={item.key}
       data-dialogue-key={item.key}
       className={`${styles.dialogueItem} ${
-        readingText?.key === item.key ? styles.dialogueItemReading : ""
+        reading ? styles.dialogueItemReading : ""
       } ${
         selectedCharacter != null && item.name === selectedCharacter
           ? styles.currentUserDialogue
