@@ -1,4 +1,5 @@
 import styles from "../styles.module.scss";
+import { useState } from "react";
 
 interface DialogueItemProps {
   item: {
@@ -28,6 +29,22 @@ const DialogueItem = ({
   muteSelectedCharacter,
   readSpecificDialogue
 }: DialogueItemProps) => {
+  const [showDisabledDialogue, setShowDisabledDialogue] = useState(false);
+
+  const dialogueIsDisabled = (hideCharacterDialogue || muteSelectedCharacter) &&
+    selectedCharacter != null &&
+    item.name === selectedCharacter;
+
+  const displayDialogue = !dialogueIsDisabled || showDisabledDialogue;
+
+  const handleClick = () => {
+    if(dialogueIsDisabled) {
+      setShowDisabledDialogue(!showDisabledDialogue);
+    } else {
+      readSpecificDialogue(item);
+    }
+  };
+
   return (
     <button
       key={item.key}
@@ -39,12 +56,7 @@ const DialogueItem = ({
           ? styles.currentUserDialogue
           : ""
       }`}
-      onClick={() => readSpecificDialogue(item)}
-      disabled={
-        (hideCharacterDialogue || muteSelectedCharacter) &&
-        selectedCharacter != null &&
-        item.name === selectedCharacter
-      }
+      onClick={handleClick}
       type="button"
     >
       <span
@@ -56,15 +68,7 @@ const DialogueItem = ({
       >
         {item.name}
       </span>
-      {hideCharacterDialogue &&
-      selectedCharacter != null &&
-      item.name === selectedCharacter ? (
-        <span className={styles.dialogueText}>
-          <em style={{ color: "#999", fontStyle: "italic" }}>
-            (Disabled)
-          </em>
-        </span>
-      ) : (
+      {displayDialogue ? (
         <>
           <span className={styles.dialogueText}>{item.dialogue}</span>
           {item.readingTime ? (
@@ -75,6 +79,12 @@ const DialogueItem = ({
             ""
           )}
         </>
+      ) : (
+        <span className={styles.dialogueText}>
+          <em style={{ color: "#999", fontStyle: "italic" }}>
+            (Disabled)
+          </em>
+        </span>
       )}
     </button>
   );
