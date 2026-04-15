@@ -20,7 +20,6 @@ interface DialogueListProps {
     key: string;
   }) => void;
   dialogueListRef: React.RefObject<HTMLDivElement>;
-  setHideCharacterDialogue?: (hide: boolean) => void;
 }
 
 const DialogueList = ({
@@ -30,8 +29,7 @@ const DialogueList = ({
   hideCharacterDialogue,
   muteSelectedCharacter,
   readSpecificDialogue,
-  dialogueListRef,
-  setHideCharacterDialogue
+  dialogueListRef
 }: DialogueListProps) => {
   return (
     <div className={styles.dialogueList} ref={dialogueListRef}>
@@ -44,7 +42,6 @@ const DialogueList = ({
           hideCharacterDialogue={hideCharacterDialogue}
           muteSelectedCharacter={muteSelectedCharacter}
           readSpecificDialogue={readSpecificDialogue}
-          setHideCharacterDialogue={setHideCharacterDialogue}
         />
       ))}
     </div>
