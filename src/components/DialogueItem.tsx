@@ -1,5 +1,6 @@
 import styles from "../styles.module.scss";
 import { useState, useEffect } from "react";
+import ProgressBar from "./ProgressBar";
 
 interface DialogueItemProps {
   item: {
@@ -30,15 +31,15 @@ const DialogueItem = ({
   readSpecificDialogue
 }: DialogueItemProps) => {
   const [showDisabledDialogue, setShowDisabledDialogue] = useState(false);
-  const [progress, setProgress] = useState(0);
-
+  
   const dialogueIsDisabled = (hideCharacterDialogue || muteSelectedCharacter) &&
-    selectedCharacter != null &&
-    item.name === selectedCharacter;
-
+  selectedCharacter != null &&
+  item.name === selectedCharacter;
+  
   const displayDialogue = !dialogueIsDisabled || showDisabledDialogue;
-
+  
   // Handle progress tracking when the item is being read
+  const [progress, setProgress] = useState(0);
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
 
@@ -102,12 +103,7 @@ const DialogueItem = ({
         <>
           <span className={styles.dialogueText}>{item.dialogue}</span>
           {item.readingTime > 0 && (
-            <div className={styles.progressBarContainer}>
-              <div
-                className={styles.progressBar}
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+            <ProgressBar progress={progress} />
           )}
           {item.readingTime ? (
             <span className={styles.readingTime}>
