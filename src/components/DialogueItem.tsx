@@ -1,6 +1,7 @@
 import styles from "../styles.module.scss";
 import { useState, useEffect } from "react";
 import ProgressBar from "./ProgressBar";
+import { useTimeProgress } from "../hooks/useTimeProgress";
 
 interface DialogueItemProps {
   item: {
@@ -39,33 +40,14 @@ const DialogueItem = ({
   const displayDialogue = !dialogueIsDisabled || showDisabledDialogue;
   
   // Handle progress tracking when the item is being read
-  const [progress, setProgress] = useState(0);
+  const { progress, start, stop } = useTimeProgress({ time: item.readingTime });
+
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | null = null;
-
     if (readingText?.key === item.key && item.readingTime > 0) {
-      setProgress(0);
-
-      // Calculate interval based on reading time (e.g., 100% over the reading time)
-      const intervalTime = Math.max(50, item.readingTime * 10); // Minimum 50ms, maximum 1000ms per step
-      const progressIncrement = 100 / (item.readingTime * (1000 / intervalTime));
-
-      interval = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 100) {
-            if (interval) clearInterval(interval);
-            return 100;
-          }
-          return prev + progressIncrement;
-        });
-      }, intervalTime);
+      start();
     } else {
-      setProgress(0);
+      stop();
     }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
   }, [readingText, item.key, item.readingTime]);
 
   const handleClick = () => {
