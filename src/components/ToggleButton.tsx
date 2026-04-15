@@ -1,26 +1,25 @@
-import styles from "../styles.module.scss";
+import styles from "./toggleButton.module.scss";
 
 interface ToggleButtonProps {
   isActive: boolean;
   onClick: () => void;
-  label: string;
   ariaPressed?: boolean;
+  children: any;
 }
 
-const ToggleButton = ({
-  isActive,
-  onClick,
-  label,
-  ariaPressed
-}: ToggleButtonProps) => {
+const ToggleButton = ({ isActive, onClick, children }: ToggleButtonProps) => {
   return (
-    <button
-      className={`${styles.toggleButton} ${isActive ? styles.toggleButtonActive : ""}`}
-      onClick={onClick}
-      aria-pressed={ariaPressed}
-    >
-      {label}
-    </button>
+    <label className={styles.switch}>
+      <input
+        checked={isActive}
+        type="checkbox"
+        className={styles.toggle}
+        onChange={onClick}
+      />
+      <span className={styles.slider} />
+      <span className={styles.cardSide} />
+      <span className={styles.label}>{children}</span>
+    </label>
   );
 };
 

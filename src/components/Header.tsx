@@ -1,7 +1,7 @@
-import styles from "../styles.module.scss";
+import styles from "./header.module.scss";
 import ToggleButton from "./ToggleButton";
 
-interface PaginationControlsProps {
+interface HeaderProps {
   currentPageNumber: number;
   totalPages: number;
   prevPageDisabled: boolean;
@@ -12,9 +12,10 @@ interface PaginationControlsProps {
   setHideCharacterDialogue: (hide: boolean) => void;
   muteSelectedCharacter: boolean;
   setMuteSelectedCharacter: (mute: boolean) => void;
+  onToggleSettings: () => void;
 }
 
-const PaginationControls = ({
+const Header = ({
   currentPageNumber,
   totalPages,
   prevPageDisabled,
@@ -24,28 +25,20 @@ const PaginationControls = ({
   hideCharacterDialogue,
   setHideCharacterDialogue,
   muteSelectedCharacter,
-  setMuteSelectedCharacter
-}: PaginationControlsProps) => {
+  setMuteSelectedCharacter,
+  onToggleSettings,
+}: HeaderProps) => {
   return (
-    <div className={styles.paginationControls}>
+    <div className={styles.header}>
       <button
-        className={styles.paginationButton}
-        onClick={goToPreviousPage}
-        disabled={prevPageDisabled}
+        className={styles.voiceSelectorToggle}
+        onClick={() => onToggleSettings()}
+        aria-label="Settings"
       >
-        Previous
-      </button>
-
-      <span className={styles.pageIndicator}>
-        Page {currentPageNumber + 1} of {totalPages}
-      </span>
-
-      <button
-        className={styles.paginationButton}
-        onClick={goToNextPage}
-        disabled={nextPageDisabled}
-      >
-        Next
+        {/* <SettingsIcon color="#3b82f6" /> */}
+        <span style={{ marginLeft: "0.5rem", fontSize: "14px" }}>
+          Voice & Character Settings
+        </span>
       </button>
 
       {/* New toggles for character dialogue and voice mute */}
@@ -53,18 +46,20 @@ const PaginationControls = ({
         <ToggleButton
           isActive={hideCharacterDialogue}
           onClick={() => setHideCharacterDialogue(!hideCharacterDialogue)}
-          label="Hide Character Dialogue"
           ariaPressed={hideCharacterDialogue}
-        />
+        >
+          Cacher mes répliques
+        </ToggleButton>
         <ToggleButton
           isActive={muteSelectedCharacter}
           onClick={() => setMuteSelectedCharacter(!muteSelectedCharacter)}
-          label="Mute Selected Character"
           ariaPressed={muteSelectedCharacter}
-        />
+        >
+          Ne pas lire mes répliques
+        </ToggleButton>
       </div>
     </div>
   );
 };
 
-export default PaginationControls;
+export default Header;

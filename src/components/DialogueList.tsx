@@ -1,4 +1,4 @@
-import styles from "../styles.module.scss";
+import styles from "./dialogueLis.module.scss";
 import DialogueItem from "./DialogueItem";
 
 interface DialogueListProps {
@@ -13,7 +13,6 @@ interface DialogueListProps {
   } | null;
   selectedCharacter: string | null;
   hideCharacterDialogue: boolean;
-  muteSelectedCharacter: boolean;
   readSpecificDialogue: (dialogueItem: {
     name: string;
     dialogue: string;
@@ -27,11 +26,13 @@ const DialogueList = ({
   readingText,
   selectedCharacter,
   hideCharacterDialogue,
-  muteSelectedCharacter,
   readSpecificDialogue,
   dialogueListRef
 }: DialogueListProps) => {
   return (
+    <div  className={styles.dialogueListWrapper}>
+
+
     <div className={styles.dialogueList} ref={dialogueListRef}>
       {currentDialoguePage.map((item) => (
         <DialogueItem
@@ -40,10 +41,11 @@ const DialogueList = ({
           reading={readingText?.key === item.key}
           selectedCharacter={selectedCharacter}
           hideCharacterDialogue={hideCharacterDialogue}
-          muteSelectedCharacter={muteSelectedCharacter}
+          muteSelectedCharacter={false}
           readSpecificDialogue={readSpecificDialogue}
         />
       ))}
+    </div>
     </div>
   );
 };

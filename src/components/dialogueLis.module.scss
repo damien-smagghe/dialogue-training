@@ -1,0 +1,11 @@
+.dialogueListWrapper {
+  padding: 30px;
+}
+
+.dialogueList {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+  margin-top: 20px;
+  flex-grow: 1;
+}

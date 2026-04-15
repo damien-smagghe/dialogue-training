@@ -1,10 +1,11 @@
-.hero {
+.pageBody {
   display: flex;
   flex-direction: column;
-  row-gap: 30px;
   background: #333;
-  padding: 30px;
   position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .dialogueList {

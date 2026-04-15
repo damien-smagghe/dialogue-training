@@ -5,8 +5,9 @@ import SettingsIcon from "./components/SettingsIcon.svg";
 // import times from "../times.json";
 import VoiceSelectorModal from "./components/VoiceSelectorModal";
 import DialogueList from "./components/DialogueList";
-import PaginationControls from "./components/PaginationControls";
+import Header from "./components/Header";
 import StickyControls from "./components/StickyControls";
+import "./global-styles.scss";
 
 interface MainPageProps {
   dialogues: readonly {
@@ -23,7 +24,7 @@ interface MainPageProps {
 //   {},
 // ) as Record<string, number>;
 
-const Hero = ({ dialogues, characters }: MainPageProps) => {
+const MainPage = ({ dialogues, characters }: MainPageProps) => {
   const [currentPageNumber, setCurrentPage] = useState(0);
   const currentDialoguePage = dialogues[currentPageNumber] || [];
 
@@ -34,18 +35,15 @@ const Hero = ({ dialogues, characters }: MainPageProps) => {
   //   })),
   // );
   // console.log("newDialogues ->", newDialogues);
-  const totalPages = dialogues.length;
-  const isFirstPage = currentPageNumber === 0;
-  const isLastPage = currentPageNumber === totalPages - 1;
 
   const goToPreviousPage = () => {
-    if (!isFirstPage) {
+    if (!prevPageDisabled) {
       setCurrentPage(currentPageNumber - 1);
     }
   };
 
   const goToNextPage = () => {
-    if (!isLastPage) {
+    if (!nextPageDisabled) {
       setCurrentPage(currentPageNumber + 1);
     }
   };
@@ -111,35 +109,19 @@ const Hero = ({ dialogues, characters }: MainPageProps) => {
     start(dialogueItem.key);
   };
 
+  const totalPages = dialogues.length;
+  const prevPageDisabled = reading || currentPageNumber === 0;
+  const nextPageDisabled = reading || currentPageNumber === totalPages - 1;
+
   return (
     <>
-      <div className={styles.hero}>
-        {/* Voice Selector Toggle */}
-        <div className={styles.voiceSelectorContainer}>
-          <button
-            className={styles.voiceSelectorToggle}
-            onClick={() => setIsVoiceSelectorOpen(!isVoiceSelectorOpen)}
-            aria-label="Settings"
-          >
-            {/* <SettingsIcon color="#3b82f6" /> */}
-            <span style={{ marginLeft: "0.5rem", fontSize: "14px" }}>
-              Voice & Character Settings
-            </span>
-          </button>
-        </div>
-
-        {/* Pagination Controls */}
-        <PaginationControls
-          currentPageNumber={currentPageNumber}
-          totalPages={totalPages}
-          isFirstPage={isFirstPage}
-          isLastPage={isLastPage}
-          goToPreviousPage={goToPreviousPage}
-          goToNextPage={goToNextPage}
+      <div className={styles.pageBody}>
+        <Header
           hideCharacterDialogue={hideCharacterDialogue}
           setHideCharacterDialogue={setHideCharacterDialogue}
           muteSelectedCharacter={muteSelectedCharacter}
           setMuteSelectedCharacter={setMuteSelectedCharacter}
+          onToggleSettings={() => setIsVoiceSelectorOpen(!isVoiceSelectorOpen)}
         />
 
         {/* Current Page Dialogue List */}
@@ -148,7 +130,6 @@ const Hero = ({ dialogues, characters }: MainPageProps) => {
           readingText={reading ? readingText: null}
           selectedCharacter={selectedCharacter}
           hideCharacterDialogue={hideCharacterDialogue}
-          muteSelectedCharacter={muteSelectedCharacter}
           readSpecificDialogue={readSpecificDialogue}
           dialogueListRef={dialogueListRef}
         />
@@ -171,6 +152,12 @@ const Hero = ({ dialogues, characters }: MainPageProps) => {
 
         {/* Sticky Play/Stop Buttons */}
         <StickyControls
+          currentPageNumber={currentPageNumber}
+          totalPages={totalPages}
+          prevPageDisabled={prevPageDisabled}
+          nextPageDisabled={nextPageDisabled}
+          goToPreviousPage={goToPreviousPage}
+          goToNextPage={goToNextPage}
           reading={reading}
           handleStart={handleStart}
           stop={stop}
@@ -180,4 +167,4 @@ const Hero = ({ dialogues, characters }: MainPageProps) => {
   );
 };
 
-export default Hero;
+export default MainPage;

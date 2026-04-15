@@ -1,0 +1,85 @@
+
+
+/* Pagination Styles */
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
+  padding: 10px;
+  background: #444;
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 4px;
+  position: sticky;
+  top: 0;
+}
+
+.paginationButton {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.paginationButton:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.pageIndicator {
+  color: white;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+.page {
+  background: #fff;
+  color: #111;
+  width: 800px;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.pageTitle {
+  text-align: center;
+  font-size: 30px;
+  line-height: 42px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.user {
+  font-weight: bold;
+}
+
+/* Pagination Controls Styles */
+.controlsToggles {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.toggleLabel input {
+  cursor: pointer;
+}
+
+

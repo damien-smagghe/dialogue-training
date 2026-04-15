@@ -1,0 +1,51 @@
+.stickyControlsWrapper {
+  position: sticky;
+  bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  color: #fff;
+}
+
+.pages {
+  font-size: 11px;
+}
+
+.stickyControls {
+  display: flex;
+  gap: 15px;
+  background: #333;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  align-items: center;
+}
+
+.button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.playButton {
+  background: #28a745;
+  color: white;
+}
+
+.playButton:hover:not(:disabled) {
+  background: #218838;
+}
+
+.playButton:disabled {
+  background: #6c757d;
+}
+
+.stopButton {
+  background: #dc3545;
+  color: white;
+}
