@@ -19,6 +19,7 @@ interface DialogueListProps {
     key: string;
   }) => void;
   dialogueListRef: React.RefObject<HTMLDivElement>;
+  setHideCharacterDialogue?: (hide: boolean) => void;
 }
 
 const DialogueList = ({
@@ -28,8 +29,26 @@ const DialogueList = ({
   hideCharacterDialogue,
   muteSelectedCharacter,
   readSpecificDialogue,
-  dialogueListRef
+  dialogueListRef,
+  setHideCharacterDialogue
 }: DialogueListProps) => {
+  const handleDialogueClick = (item: {
+    name: string;
+    dialogue: string;
+    key: string;
+  }) => {
+    // If this is a selected character's dialogue and hideCharacterDialogue is true,
+    // toggle the hide state
+    if (selectedCharacter != null &&
+        item.name === selectedCharacter &&
+        hideCharacterDialogue &&
+        setHideCharacterDialogue) {
+      setHideCharacterDialogue(!hideCharacterDialogue);
+    } else {
+      readSpecificDialogue(item);
+    }
+  };
+
   return (
     <div className={styles.dialogueList} ref={dialogueListRef}>
       {currentDialoguePage.map((item) => (
@@ -43,7 +62,7 @@ const DialogueList = ({
               ? styles.currentUserDialogue
               : ""
           }`}
-          onClick={() => readSpecificDialogue(item)}
+          onClick={() => handleDialogueClick(item)}
           disabled={
             (hideCharacterDialogue || muteSelectedCharacter) &&
             selectedCharacter != null &&
