@@ -49,7 +49,7 @@ const StickyControls = ({
         >
           ←
         </button>
-        <div className={styles.pages}>{currentPageNumber}/{totalPages}</div>
+        <div className={styles.pages}>{currentPageNumber +1}/{totalPages}</div>
         <button
           className={`${styles.button}`}
           onClick={goToNextPage}

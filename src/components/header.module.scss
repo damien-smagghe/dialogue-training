@@ -1,7 +1,7 @@
 /* Pagination Styles */
 .header {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 15px;
   margin: 20px 0;
@@ -12,6 +12,12 @@
   position: sticky;
   top: 0;
   z-index: 2;
+  color: #fff;
+}
+
+.title {
+  flex-grow: 1;
+  text-align: center;
 }
 
 .paginationButton {
@@ -88,6 +94,6 @@
 }
 
 .settingsSvg {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
 }

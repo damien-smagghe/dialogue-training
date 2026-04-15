@@ -1,22 +1,12 @@
 import styles from "./header.module.scss";
-import ToggleButton from "./ToggleButton";
-import SettingsIcon from  './SettingsIcon.svg'
+import SettingsIcon from "./SettingsIcon.svg";
 
 interface HeaderProps {
-  hideCharacterDialogue: boolean;
-  setHideCharacterDialogue: (hide: boolean) => void;
-  muteSelectedCharacter: boolean;
   setMuteSelectedCharacter: (mute: boolean) => void;
   onToggleSettings: () => void;
 }
 
-const Header = ({
-  hideCharacterDialogue,
-  setHideCharacterDialogue,
-  muteSelectedCharacter,
-  setMuteSelectedCharacter,
-  onToggleSettings,
-}: HeaderProps) => {
+const Header = ({ onToggleSettings }: HeaderProps) => {
   return (
     <div className={styles.header}>
       <button
@@ -26,23 +16,9 @@ const Header = ({
       >
         <SettingsIcon className={styles.settingsSvg} />
       </button>
+      <div className={styles.title}>
 
-      {/* New toggles for character dialogue and voice mute */}
-      <div className={styles.controlsToggles}>
-        <ToggleButton
-          isActive={hideCharacterDialogue}
-          onClick={() => setHideCharacterDialogue(!hideCharacterDialogue)}
-          ariaPressed={hideCharacterDialogue}
-        >
-          Cacher mes répliques
-        </ToggleButton>
-        <ToggleButton
-          isActive={muteSelectedCharacter}
-          onClick={() => setMuteSelectedCharacter(!muteSelectedCharacter)}
-          ariaPressed={muteSelectedCharacter}
-        >
-          Ne pas lire mes répliques
-        </ToggleButton>
+      La bande à Bécède
       </div>
     </div>
   );

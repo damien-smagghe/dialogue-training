@@ -1,4 +1,5 @@
 import styles from "../styles.module.scss";
+import ToggleButton from "./ToggleButton.tsx";
 
 interface VoiceSelectorModalProps {
   isOpen: boolean;
@@ -17,12 +18,8 @@ interface VoiceSelectorModalProps {
   ) => void;
   setSelectedCharacter: (character: string | null) => void;
   setHideCharacterDialogue: (hide: boolean) => void;
-  start: (key: string) => void;
-  currentDialoguePage: readonly {
-    name: string;
-    dialogue: string;
-    key: string;
-  }[];
+  muteSelectedCharacter: boolean;
+  setMuteSelectedCharacter: (mute: boolean) => void;
 }
 
 const VoiceSelectorModal = ({
@@ -36,8 +33,8 @@ const VoiceSelectorModal = ({
   handleCharacterVoiceChange,
   setSelectedCharacter,
   setHideCharacterDialogue,
-  start,
-  currentDialoguePage,
+  muteSelectedCharacter,
+  setMuteSelectedCharacter,
 }: VoiceSelectorModalProps) => {
   if (!isOpen) return null;
 
@@ -45,26 +42,25 @@ const VoiceSelectorModal = ({
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setSelectedCharacter(event.target.value);
-    if (currentDialoguePage.length > 0) {
-      const [firstDialogueItem] = currentDialoguePage;
-      start(firstDialogueItem.key);
-    }
   };
 
   // Group voices by language for better UX
-  const voicesByLanguage = voices.reduce((acc, voice) => {
-    if (!acc[voice.lang]) {
-      acc[voice.lang] = [];
-    }
-    acc[voice.lang].push(voice);
-    return acc;
-  }, {} as Record<string, typeof voices>);
+  const voicesByLanguage = voices.reduce(
+    (acc, voice) => {
+      if (!acc[voice.lang]) {
+        acc[voice.lang] = [];
+      }
+      acc[voice.lang].push(voice);
+      return acc;
+    },
+    {} as Record<string, typeof voices>,
+  );
 
   return (
     <div className={styles.voiceSelectorModal}>
       <div className={styles.voiceSelectorModalContent}>
         <div className={styles.voiceSelectorModalHeader}>
-          <h2>Audio Settings</h2>
+          <h2>Paramètres</h2>
           <button
             className={styles.voiceSelectorModalClose}
             onClick={onClose}
@@ -75,22 +71,60 @@ const VoiceSelectorModal = ({
         </div>
 
         <div className={styles.voiceSelectorModalBody}>
+          {/* Character Selection */}
+          <div className={styles.voiceSelectorGroup}>
+            <h3>Personnage principal</h3>
+            <p className={styles.voiceSelectorDescription}>
+              Choisissez le personnage que vous interprétez dans la pièce.
+            </p>
+
+            <select
+              id="character-select"
+              onChange={handleCharacterChange}
+              value={selectedCharacter || ""}
+              className={styles.voiceSelectorSelect}
+            >
+              <option key="null" value="">Choisissez un personnage</option>
+              {characters.map((character) => (
+                <option key={character} value={character}>
+                  {character}
+                </option>
+              ))}
+            </select>
+
+            {/* Hide Dialogue Toggle */}
+            <ToggleButton
+              isActive={hideCharacterDialogue}
+              onClick={() => setHideCharacterDialogue(!hideCharacterDialogue)}
+            >
+              Cacher mes répliques
+            </ToggleButton>
+            <ToggleButton
+              isActive={muteSelectedCharacter}
+              onClick={() => setMuteSelectedCharacter(!muteSelectedCharacter)}
+              ariaPressed={muteSelectedCharacter}
+            >
+              Ne pas lire mes répliques
+            </ToggleButton>
+          </div>
+
           {/* Character Voice Selectors - Improved UX */}
           <div className={styles.voiceSelectorGroup}>
-            <h3>Character Voices</h3>
+            <h3>Voix des personnages</h3>
             <p className={styles.voiceSelectorDescription}>
-              Select a voice for each character to personalize your reading experience
+              Choisissez une voix pour chaque personnage afin de personnaliser
+              votre expérience de lecture
             </p>
 
             <div className={styles.voiceSelectorGrid}>
               {characters.map((name) => (
                 <div key={name} className={styles.voiceSelectorItem}>
-                  <label className={styles.voiceSelectorLabel}>
-                    {name}
-                  </label>
+                  <label className={styles.voiceSelectorLabel}>{name}</label>
                   <div className={styles.voiceSelectorSelectContainer}>
                     <select
-                      onChange={(event) => handleCharacterVoiceChange(name, event)}
+                      onChange={(event) =>
+                        handleCharacterVoiceChange(name, event)
+                      }
                       value={voiceNameByCharacters[name]}
                       className={styles.voiceSelectorSelect}
                     >
@@ -107,72 +141,14 @@ const VoiceSelectorModal = ({
             </div>
           </div>
 
-          {/* Character Selection */}
-          <div className={styles.voiceSelectorGroup}>
-            <h3>Focus Character</h3>
-            <p className={styles.voiceSelectorDescription}>
-              Select which character's dialogue you want to focus on
-            </p>
-
-            <div className={styles.voiceSelectorSelectContainer}>
-              <select
-                id="character-select"
-                onChange={handleCharacterChange}
-                value={selectedCharacter || characters[0] || ""}
-                className={styles.voiceSelectorSelect}
-              >
-                <option value="">Select a character to focus on</option>
-                {characters.map((character) => (
-                  <option key={character} value={character}>
-                    {character}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Hide Dialogue Toggle */}
-            <div className={styles.voiceSelectorToggleContainer}>
-              <label className={styles.voiceSelectorLabel}>
-                <input
-                  type="checkbox"
-                  checked={hideCharacterDialogue}
-                  onChange={(e) => setHideCharacterDialogue(e.target.checked)}
-                />{" "}
-                Hide dialogue text for {selectedCharacter || "no character"}
-              </label>
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className={styles.voiceSelectorGroup}>
-            <h3>Quick Actions</h3>
-            <div className={styles.voiceSelectorQuickActions}>
-              <button
-                className={styles.voiceSelectorQuickAction}
-                onClick={() => {
-                  // Reset all voices to default
-                  characters.forEach(character => {
-                    handleCharacterVoiceChange(character, { target: { value: '' } } as any);
-                  });
-                  setSelectedCharacter(null);
-                  setHideCharacterDialogue(false);
-                }}
-              >
-                Reset to Defaults
-              </button>
-              <button
-                className={styles.voiceSelectorQuickAction}
-                onClick={() => {
-                  // Apply to all characters
-                  const defaultVoice = voices[0]?.name || '';
-                  characters.forEach(character => {
-                    handleCharacterVoiceChange(character, { target: { value: defaultVoice } } as any);
-                  });
-                }}
-              >
-                Apply to All
-              </button>
-            </div>
+          <div className={styles.modalFooter}>
+            <button
+              className={`${styles.button} ${styles.footerModalButton}`}
+              onClick={onClose}
+              aria-label="Close settings"
+            >
+              Valider
+            </button>
           </div>
         </div>
       </div>

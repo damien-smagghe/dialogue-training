@@ -8,7 +8,7 @@ import SimpleCrypto from "simple-crypto-js";
 import encryptedFile from "./dialogues.enc.json";
 
 const DecryptedApp = () => {
-  const { session, updateSession } = useSession();
+  const { session } = useSession();
 
   // State to hold decrypted dialogues
   const [dialogues, setDialogues] = useState(null);

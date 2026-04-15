@@ -1,7 +1,6 @@
 import styles from "./styles.module.scss";
 import { useDialogReader } from "../hooks/useDialogReader";
 import { useState, useEffect, useRef } from "react";
-import SettingsIcon from "./components/SettingsIcon.svg";
 // import times from "../times.json";
 import VoiceSelectorModal from "./components/VoiceSelectorModal";
 import DialogueList from "./components/DialogueList";
@@ -54,7 +53,7 @@ const MainPage = ({ dialogues, characters }: MainPageProps) => {
   };
 
   const [hideCharacterDialogue, setHideCharacterDialogue] = useState(true);
-  const [muteSelectedCharacter, setMuteSelectedCharacter] = useState(false);
+  const [muteSelectedCharacter, setMuteSelectedCharacter] = useState(true);
   const {
     voices,
     start,
@@ -83,6 +82,11 @@ const MainPage = ({ dialogues, characters }: MainPageProps) => {
   }, [currentDialoguePage, reading, readingText]);
 
   const [isVoiceSelectorOpen, setIsVoiceSelectorOpen] = useState(false);
+  useEffect(() => {
+    if (!selectedCharacter) {
+      setIsVoiceSelectorOpen(true)
+    }
+  }, [])
   const dialogueListRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to active dialogue item
@@ -117,10 +121,6 @@ const MainPage = ({ dialogues, characters }: MainPageProps) => {
     <>
       <div className={styles.pageBody}>
         <Header
-          hideCharacterDialogue={hideCharacterDialogue}
-          setHideCharacterDialogue={setHideCharacterDialogue}
-          muteSelectedCharacter={muteSelectedCharacter}
-          setMuteSelectedCharacter={setMuteSelectedCharacter}
           onToggleSettings={() => setIsVoiceSelectorOpen(!isVoiceSelectorOpen)}
         />
 
@@ -148,6 +148,8 @@ const MainPage = ({ dialogues, characters }: MainPageProps) => {
           setHideCharacterDialogue={setHideCharacterDialogue}
           start={start}
           currentDialoguePage={currentDialoguePage}
+          muteSelectedCharacter={muteSelectedCharacter}
+          setMuteSelectedCharacter={setMuteSelectedCharacter}
         />
 
         {/* Sticky Play/Stop Buttons */}

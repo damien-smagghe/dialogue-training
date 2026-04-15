@@ -105,10 +105,12 @@ export const useDialogReader = ({
       [character]: voiceName,
     });
     stop();
-    speech({
-      text: voiceName,
-      voice: voices.find(({ name }) => name === voiceName)!,
-    });
+    setTimeout(() => {
+      speech({
+        text: voiceName,
+        voice: voices.find(({ name }) => name === voiceName)!,
+      });
+    }, 100)
   };
   const voiceByCharacters = Object.keys(voiceNameByCharacters).reduce(
     (acc, characterName) => {

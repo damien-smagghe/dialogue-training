@@ -93,7 +93,7 @@ const DialogueItem = ({
         </>
       ) : (
         <span className={styles.dialogueText}>
-          <em style={{ color: "#999", fontStyle: "italic" }}>(Disabled)</em>
+          <em style={{ color: "#999", fontStyle: "italic" }}>Répliques masqué, cliquez pour l'afficher </em>
         </span>
       )}
       {reading && item.readingTime > 0 && <ProgressBar progress={progress} />}
