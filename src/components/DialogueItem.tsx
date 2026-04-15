@@ -18,7 +18,6 @@ interface DialogueItemProps {
     dialogue: string;
     key: string;
   }) => void;
-  setHideCharacterDialogue?: (hide: boolean) => void;
 }
 
 const DialogueItem = ({
@@ -27,22 +26,8 @@ const DialogueItem = ({
   selectedCharacter,
   hideCharacterDialogue,
   muteSelectedCharacter,
-  readSpecificDialogue,
-  setHideCharacterDialogue
+  readSpecificDialogue
 }: DialogueItemProps) => {
-  const handleDialogueClick = () => {
-    // If this is a selected character's dialogue and hideCharacterDialogue is true,
-    // toggle the hide state
-    if (selectedCharacter != null &&
-        item.name === selectedCharacter &&
-        hideCharacterDialogue &&
-        setHideCharacterDialogue) {
-      setHideCharacterDialogue(!hideCharacterDialogue);
-    } else {
-      readSpecificDialogue(item);
-    }
-  };
-
   return (
     <button
       key={item.key}
@@ -54,7 +39,7 @@ const DialogueItem = ({
           ? styles.currentUserDialogue
           : ""
       }`}
-      onClick={handleDialogueClick}
+      onClick={() => readSpecificDialogue(item)}
       disabled={
         (hideCharacterDialogue || muteSelectedCharacter) &&
         selectedCharacter != null &&

@@ -151,7 +151,6 @@ const Hero = ({ dialogues, characters }: MainPageProps) => {
           muteSelectedCharacter={muteSelectedCharacter}
           readSpecificDialogue={readSpecificDialogue}
           dialogueListRef={dialogueListRef}
-          setHideCharacterDialogue={setHideCharacterDialogue}
         />
 
         {/* Voice Selector Modal */}
