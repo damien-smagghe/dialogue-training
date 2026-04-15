@@ -65,7 +65,7 @@ const MainPage = ({ dialogues, characters }: MainPageProps) => {
     readingText,
     selectedCharacter,
     setSelectedCharacter,
-  } = useDialogReader({ dialogues, characters, hideCharacterDialogue });
+  } = useDialogReader({ dialogues, characters, hideCharacterDialogue: muteSelectedCharacter });
   useEffect(() => {
     if (reading) {
       const readingInCurrentPage = currentDialoguePage.some(

@@ -27,16 +27,17 @@ const DialogueItem = ({
   selectedCharacter,
   hideCharacterDialogue,
   muteSelectedCharacter,
-  readSpecificDialogue
+  readSpecificDialogue,
 }: DialogueItemProps) => {
   const [showDisabledDialogue, setShowDisabledDialogue] = useState(false);
-  
-  const dialogueIsDisabled = (hideCharacterDialogue || muteSelectedCharacter) &&
-  selectedCharacter != null &&
-  item.name === selectedCharacter;
-  
+
+  const dialogueIsDisabled =
+    (hideCharacterDialogue || muteSelectedCharacter) &&
+    selectedCharacter != null &&
+    item.name === selectedCharacter;
+
   const displayDialogue = !dialogueIsDisabled || showDisabledDialogue;
-  
+
   // Handle progress tracking when the item is being read
   const { progress, start, stop } = useTimeProgress({ time: item.readingTime });
 
@@ -49,7 +50,7 @@ const DialogueItem = ({
   }, [reading, item.readingTime]);
 
   const handleClick = () => {
-    if(dialogueIsDisabled) {
+    if (dialogueIsDisabled) {
       setShowDisabledDialogue(!showDisabledDialogue);
     } else {
       readSpecificDialogue(item);
@@ -82,9 +83,6 @@ const DialogueItem = ({
       {displayDialogue ? (
         <>
           <span className={styles.dialogueText}>{item.dialogue}</span>
-          {item.readingTime > 0 && (
-            <ProgressBar progress={progress} />
-          )}
           {item.readingTime ? (
             <span className={styles.readingTime}>
               ⏱️ {item?.readingTime.toFixed(1)}s
@@ -95,11 +93,10 @@ const DialogueItem = ({
         </>
       ) : (
         <span className={styles.dialogueText}>
-          <em style={{ color: "#999", fontStyle: "italic" }}>
-            (Disabled)
-          </em>
+          <em style={{ color: "#999", fontStyle: "italic" }}>(Disabled)</em>
         </span>
       )}
+      {reading && item.readingTime > 0 && <ProgressBar progress={progress} />}
     </button>
   );
 };

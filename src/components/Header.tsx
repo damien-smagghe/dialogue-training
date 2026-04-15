@@ -1,13 +1,8 @@
 import styles from "./header.module.scss";
 import ToggleButton from "./ToggleButton";
+import SettingsIcon from  './SettingsIcon.svg'
 
 interface HeaderProps {
-  currentPageNumber: number;
-  totalPages: number;
-  prevPageDisabled: boolean;
-  nextPageDisabled: boolean;
-  goToPreviousPage: () => void;
-  goToNextPage: () => void;
   hideCharacterDialogue: boolean;
   setHideCharacterDialogue: (hide: boolean) => void;
   muteSelectedCharacter: boolean;
@@ -16,12 +11,6 @@ interface HeaderProps {
 }
 
 const Header = ({
-  currentPageNumber,
-  totalPages,
-  prevPageDisabled,
-  nextPageDisabled,
-  goToPreviousPage,
-  goToNextPage,
   hideCharacterDialogue,
   setHideCharacterDialogue,
   muteSelectedCharacter,
@@ -31,14 +20,11 @@ const Header = ({
   return (
     <div className={styles.header}>
       <button
-        className={styles.voiceSelectorToggle}
+        className={styles.settings}
         onClick={() => onToggleSettings()}
         aria-label="Settings"
       >
-        {/* <SettingsIcon color="#3b82f6" /> */}
-        <span style={{ marginLeft: "0.5rem", fontSize: "14px" }}>
-          Voice & Character Settings
-        </span>
+        <SettingsIcon className={styles.settingsSvg} />
       </button>
 
       {/* New toggles for character dialogue and voice mute */}
