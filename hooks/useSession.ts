@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import type { ReadingMode } from "../src/types";
 
 const SESSION_KEY = "dialogue-training-session";
 
@@ -7,10 +8,12 @@ const useSession = () => {
     password: string | undefined; // The password for the session.
     voiceNameByCharacters: Record<string, string>; // A map of character names to their respective voice names.
     selectedCharacter: string | undefined; // The currently selected character in the session.
+    readingMode: ReadingMode; // The current reading mode (document or training).
   }>({
     password: undefined,
     voiceNameByCharacters: {},
     selectedCharacter: undefined,
+    readingMode: "document",
   });
 
   const loaded = useRef(false);
@@ -28,6 +31,8 @@ const useSession = () => {
   const updateSession = (newSession: {
     password?: string;
     voiceNameByCharacters?: Record<string, string | undefined>;
+    selectedCharacter?: string | null;
+    readingMode?: ReadingMode;
   }) => {
     const resulSession = { ...session, ...newSession };
     setSession(resulSession);

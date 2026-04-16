@@ -1,12 +1,19 @@
 import styles from "./header.module.scss";
 import SettingsIcon from "./SettingsIcon.svg";
+import type { ReadingMode } from "../types";
 
 interface HeaderProps {
   setMuteSelectedCharacter: (mute: boolean) => void;
   onToggleSettings: () => void;
+  readingMode: ReadingMode;
+  setReadingMode: (mode: ReadingMode) => void;
 }
 
-const Header = ({ onToggleSettings }: HeaderProps) => {
+const Header = ({ onToggleSettings, readingMode, setReadingMode }: HeaderProps) => {
+  const handleModeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setReadingMode(event.target.value as ReadingMode);
+  };
+
   return (
     <div className={styles.header}>
       <button
@@ -17,9 +24,17 @@ const Header = ({ onToggleSettings }: HeaderProps) => {
         <SettingsIcon className={styles.settingsSvg} />
       </button>
       <div className={styles.title}>
-
-      La bande à Bécède
+        La bande à Bécède
       </div>
+      <select
+        className={styles.modeSelect}
+        value={readingMode}
+        onChange={handleModeChange}
+        aria-label="Reading mode"
+      >
+        <option value="document">Simple lecture</option>
+        <option value="training">Entraînement</option>
+      </select>
     </div>
   );
 };

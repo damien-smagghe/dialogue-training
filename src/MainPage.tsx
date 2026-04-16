@@ -1,12 +1,15 @@
 import styles from "./styles.module.scss";
 import { useDialogReader } from "../hooks/useDialogReader";
 import { useState, useEffect, useRef } from "react";
+import type { ReadingMode } from "./types";
 // import times from "../times.json";
 import VoiceSelectorModal from "./components/VoiceSelectorModal";
 import DialogueList from "./components/DialogueList";
 import Header from "./components/Header";
 import StickyControls from "./components/StickyControls";
+import { groupDialoguesByCharacter } from "../utils/groupDialoguesByCharacter";
 import "./global-styles.scss";
+import useSession from "../hooks/useSession.ts";
 
 interface MainPageProps {
   dialogues: readonly {
@@ -24,16 +27,44 @@ interface MainPageProps {
 // ) as Record<string, number>;
 
 const MainPage = ({ dialogues, characters }: MainPageProps) => {
-  const [currentPageNumber, setCurrentPage] = useState(0);
-  const currentDialoguePage = dialogues[currentPageNumber] || [];
+  const { session, updateSession } = useSession();
 
-  // const newDialogues = dialogues.map((page) =>
-  //   page.map((dialogue) => ({
-  //     ...dialogue,
-  //     readingTime: timeByKeys[dialogue.key] || dialogue.readingTime,
-  //   })),
-  // );
-  // console.log("newDialogues ->", newDialogues);
+  const [currentPageNumber, setCurrentPage] = useState(0);
+
+  const [hideCharacterDialogue, setHideCharacterDialogue] = useState(true);
+  const [muteSelectedCharacter, setMuteSelectedCharacter] = useState(true);
+  const [readingMode, setReadingMode] = useState<ReadingMode>("document");
+  const { selectedCharacter } = session;
+  const setSelectedCharacter = (newSelectedCharacter) =>
+    updateSession({ selectedCharacter: newSelectedCharacter });
+
+  // Compute displayed content based on reading mode
+  const displayedContent =
+    readingMode === "training"
+      ? groupDialoguesByCharacter(
+          dialogues,
+          selectedCharacter || null,
+        )
+      : dialogues;
+
+  const {
+    voices,
+    start,
+    stop,
+    voiceNameByCharacters,
+    handleCharacterVoiceChange,
+    reading,
+    readingText,
+  } = useDialogReader({
+    dialogues: displayedContent,
+    characters: Array.from(characters),
+    hideCharacterDialogue: muteSelectedCharacter,
+    readingMode,
+    selectedCharacter
+  });
+
+
+  const currentDialoguePage = displayedContent[Math.min(currentPageNumber, displayedContent.length-1)] || [];
 
   const goToPreviousPage = () => {
     if (!prevPageDisabled) {
@@ -52,26 +83,19 @@ const MainPage = ({ dialogues, characters }: MainPageProps) => {
     start(fistDialogueItem.key);
   };
 
-  const [hideCharacterDialogue, setHideCharacterDialogue] = useState(true);
-  const [muteSelectedCharacter, setMuteSelectedCharacter] = useState(true);
-  const {
-    voices,
-    start,
-    stop,
-    voiceNameByCharacters,
-    handleCharacterVoiceChange,
-    reading,
-    readingText,
-    selectedCharacter,
-    setSelectedCharacter,
-  } = useDialogReader({ dialogues, characters, hideCharacterDialogue: muteSelectedCharacter });
+  // Reset page when reading mode changes
+  useEffect(() => {
+    setCurrentPage(0);
+    stop();
+  }, [readingMode]);
+
   useEffect(() => {
     if (reading) {
       const readingInCurrentPage = currentDialoguePage.some(
         (dialogue) => dialogue.key === readingText.key,
       );
       if (!readingInCurrentPage) {
-        const newPageNumber = dialogues.findIndex((page) =>
+        const newPageNumber = displayedContent.findIndex((page) =>
           page.some((dialogue) => dialogue.key === readingText.key),
         );
         if (newPageNumber !== -1) {
@@ -79,14 +103,14 @@ const MainPage = ({ dialogues, characters }: MainPageProps) => {
         }
       }
     }
-  }, [currentDialoguePage, reading, readingText]);
+  }, [currentDialoguePage, reading, readingText, displayedContent]);
 
   const [isVoiceSelectorOpen, setIsVoiceSelectorOpen] = useState(false);
   useEffect(() => {
     if (!selectedCharacter) {
-      setIsVoiceSelectorOpen(true)
+      setIsVoiceSelectorOpen(true);
     }
-  }, [])
+  }, []);
   const dialogueListRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to active dialogue item
@@ -113,7 +137,7 @@ const MainPage = ({ dialogues, characters }: MainPageProps) => {
     start(dialogueItem.key);
   };
 
-  const totalPages = dialogues.length;
+  const totalPages = displayedContent.length;
   const prevPageDisabled = reading || currentPageNumber === 0;
   const nextPageDisabled = reading || currentPageNumber === totalPages - 1;
 
@@ -122,12 +146,14 @@ const MainPage = ({ dialogues, characters }: MainPageProps) => {
       <div className={styles.pageBody}>
         <Header
           onToggleSettings={() => setIsVoiceSelectorOpen(!isVoiceSelectorOpen)}
+          readingMode={readingMode}
+          setReadingMode={setReadingMode}
         />
 
         {/* Current Page Dialogue List */}
         <DialogueList
           currentDialoguePage={currentDialoguePage}
-          readingText={reading ? readingText: null}
+          readingText={reading ? readingText : null}
           selectedCharacter={selectedCharacter}
           hideCharacterDialogue={hideCharacterDialogue}
           readSpecificDialogue={readSpecificDialogue}

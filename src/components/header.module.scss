@@ -97,3 +97,24 @@
   width: 24px;
   height: 24px;
 }
+
+.modeSelect {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  min-width: 140px;
+}
+
+.modeSelect:hover {
+  background: #0056b3;
+}
+
+.modeSelect:focus {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}

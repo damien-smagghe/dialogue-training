@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
+import type { ReadingMode } from "../src/types";
 
 import speech from "../utils/speech";
 
@@ -12,6 +13,7 @@ interface ReadingTime {
 const useSequentialReader = ({
   voices,
   textsToRead,
+  readingMode = "document",
 }: {
   voices: Record<string, SpeechSynthesisVoice | undefined>;
   textsToRead: {
@@ -21,12 +23,13 @@ const useSequentialReader = ({
     muted: boolean;
     readingTime: number;
   }[];
+  readingMode?: ReadingMode;
 }) => {
   const [reading, setReading] = useState<boolean>(false);
   const [redingIndex, setRedingIndex] = useState<number>(-1);
   const [readingTimes, setReadingTimes] = useState<ReadingTime[]>([]);
   const dialogueStartTime = useRef<number | null>(null);
-  const isWaiting = useRef<null | NodeJS.Timeout>(null);
+  const isWaiting = useRef<null | ReturnType<typeof setTimeout>>(null);
   const speechWorking = useRef(false);
 
   const start = (targetKey: string) => {
@@ -119,13 +122,20 @@ const useSequentialReader = ({
 
       // Move to next dialogue
       const nextIndex = index + 1;
-      if (reading && textsToRead[nextIndex]) {
-        setRedingIndex(nextIndex);
-      } else {
-        stop();
+      if (reading) {
+        if (textsToRead[nextIndex]) {
+          setRedingIndex(nextIndex);
+        } else {
+          // End of group reached - loop back to start in Training mode
+          if (readingMode === "training") {
+            setRedingIndex(0);
+          } else {
+            stop();
+          }
+        }
       }
     },
-    [reading, textsToRead, voices, readingTimes],
+    [reading, textsToRead, voices, readingTimes, readingMode],
   );
 
   useEffect(() => {

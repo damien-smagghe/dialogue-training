@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import useSequentialReader from "./useSequentialReader";
 import speech from "../utils/speech";
 import useSession from "./useSession.ts";
+import type { ReadingMode } from "../src/types";
 export type UseDialogReaderResult = ReturnType<typeof useDialogReader>;
 
 export type ReadingTime = ReturnType<
@@ -22,7 +23,9 @@ export const useDialogReader = ({
   dialogues,
   characters,
   hideCharacterDialogue,
-  muteSelectedCharacter
+  muteSelectedCharacter,
+  readingMode = "document",
+  selectedCharacter
 }: {
   dialogues: readonly {
     dialogue: string;
@@ -33,6 +36,8 @@ export const useDialogReader = ({
   characters: string[];
   hideCharacterDialogue: boolean;
   muteSelectedCharacter?: boolean;
+  readingMode?: ReadingMode;
+  selectedCharacter: any
 }) => {
   const { session, updateSession } = useSession();
   // french Voices
@@ -66,7 +71,7 @@ export const useDialogReader = ({
     const timer = setTimeout(loadVoices, 100);
 
     return () => clearTimeout(timer);
-  }, [characters]);
+  }, []);
 
   // Voices by Characters
   console.log("session ->", session);
@@ -91,9 +96,6 @@ export const useDialogReader = ({
     // });
   }, []);
 
-  const { selectedCharacter } = session;
-  const setSelectedCharacter = (newSelectedCharacter) =>
-    updateSession({ selectedCharacter: newSelectedCharacter });
 
   const handleCharacterVoiceChange = (
     character: string,
@@ -136,6 +138,7 @@ export const useDialogReader = ({
           readingTime,
           muted: (name === selectedCharacter && (hideCharacterDialogue || muteSelectedCharacter))
         })),
+      readingMode,
     });
 
   console.log("readingTimes ->", readingTimes);
@@ -150,6 +153,5 @@ export const useDialogReader = ({
     readingText,
     readingTimes,
     selectedCharacter,
-    setSelectedCharacter,
   };
 };

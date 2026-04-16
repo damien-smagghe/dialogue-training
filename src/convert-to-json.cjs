@@ -14,7 +14,7 @@ let jsonContent = content.replace('const dialogues = [', '[');
 jsonContent = jsonContent.replace(/(\s*)(name|dialogue|key):\s*/g, '$1"$2": ');
 
 // Replace unquoted string values (keep the existing quoted strings)
-// This handles cases like: name: "Arthur" (already good)
+// This handles cases like: name: "Arthura" (already good)
 // and need to handle: dialogue: "text..." (already good)
 
 // Remove trailing whitespace and extra commas

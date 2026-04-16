@@ -18,3 +18,5 @@ export interface EncryptedDialogueData {
   ciphertext: string
   encVersion: string
 }
+
+export type ReadingMode = "document" | "training";
