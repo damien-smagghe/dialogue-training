@@ -8,7 +8,7 @@ import SimpleCrypto from "simple-crypto-js";
 import encryptedFile from "./dialogues.enc.json";
 
 const DecryptedApp = () => {
-  const { session } = useSession();
+  const { session, updateSession } = useSession();
 
   // State to hold decrypted dialogues
   const [dialogues, setDialogues] = useState(null);
@@ -18,17 +18,30 @@ const DecryptedApp = () => {
   // Decrypt the encrypted dialogues
   const decryptDialogues = async () => {
     try {
-      console.log('session ->', session)
-      const crypto = new SimpleCrypto(session.password);
+      console.log("session ->", session);
+      let crypto = new SimpleCrypto(session.password);
 
       // Encrypted data from imported file
       const encryptedData = encryptedFile.data;
       // Decrypt (result is a Promise that resolves to an array)
-      const dialoguesData = await crypto.decrypt(
-        encryptedData,
-        "SHA-256",
-        100000,
-      );
+      let dialoguesData = null;
+      try {
+        dialoguesData = await crypto.decrypt(encryptedData, "SHA-256", 100000);
+      } catch (error) {
+        let hashPassword = decodeURIComponent(window.location.hash);
+        hashPassword = hashPassword.slice(1);
+        if (hashPassword) {
+          crypto = new SimpleCrypto(hashPassword);
+          dialoguesData = await crypto.decrypt(
+            encryptedData,
+            "SHA-256",
+            100000,
+          );
+          updateSession({ password: hashPassword });
+        } else {
+          throw error;
+        }
+      }
       // Extract unique characters
       const characters = new Set<string>();
       for (const page of dialoguesData) {
@@ -39,7 +52,6 @@ const DecryptedApp = () => {
         }
       }
 
-      console.log("Dialogues decrypted successfully:", dialoguesData);
       setDialogues({
         dialogues: dialoguesData,
         characters: Array.from(characters).sort(),
